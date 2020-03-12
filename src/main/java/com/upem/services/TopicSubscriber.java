@@ -41,9 +41,13 @@ public class TopicSubscriber {
 
 	@Autowired
 	DataRepository datarep;
-	
+
 	@Autowired
 	LocalisarionRepository localirep;
+	private static int a1;
+	private static int a2;
+	private static int a3;
+	private boolean first= true;
 
 	public static Vector<String>dataString= new Vector<String>();
 
@@ -54,7 +58,7 @@ public class TopicSubscriber {
 
 	@Scheduled(fixedRate=10000)
 	public void addDataBase() {
-
+		System.out.println("addDataBase");
 		System.out.println(dataString.size());
 		if(dataString.size()>=3 ) {
 			for (String s : dataString) {
@@ -68,38 +72,64 @@ public class TopicSubscriber {
 
 	@Scheduled(fixedRate=60000)
 	public void getlocalisation() {
+		System.out.println("getlocalisation");
+		int size1;
+		int size2;
+		int size3;
+		if(first == true) {
 
-		try {
+			a1=datarep.getallDataByAntenne(1);
+			a2=datarep.getallDataByAntenne(2);
+			a3=datarep.getallDataByAntenne(3);
 			
-		
-		DeviceData data1 = datarep.getDataByAntenne(1);
-		Antenne n1= antenneRepository.getbyId(1);
-
-		DeviceData data2 = datarep.getDataByAntenne(2);
-		Antenne n2= antenneRepository.getbyId(2);
-
-		DeviceData data3 = datarep.getDataByAntenne(3);
-		Antenne n3= antenneRepository.getbyId(3);
-
-		Integer rss1 = Integer.parseInt(data1.getRssi());
-		Integer rss2= Integer.parseInt(data2.getRssi());
-		Integer rss3 = Integer.parseInt(data3.getRssi());
-
-		Double longi = ( n1.getLeng()*(rss1) + n2.getLeng()*(rss2) + n3.getLeng()*(rss3) ) / (rss1 + rss2 + rss3);
-		Double alt = (n1.getAlt()*(rss1) + n2.getAlt()*(rss2) + n3.getAlt()*(rss3) ) / (rss1 + rss2 + rss3);
-		
-		
-		System.out.println(longi);
-		System.out.println(alt);
-		localisation loc = new localisation();
-		loc.setAltitude(alt);
-		loc.setLongitude(longi);
-		loc.setDeviceloca(repodevice.getbyIdMAc("azerty"));
-		loc.setDate(new Timestamp(System.currentTimeMillis()));
-		localirep.save(loc);
-		}catch (Exception e) {
-			System.out.println("no  data yet");
+			first = false;
 		}
+		size1=datarep.getallDataByAntenne(1);
+		size2=datarep.getallDataByAntenne(2);
+		size3=datarep.getallDataByAntenne(3);
+		
+		if((a1<size1)&&(a1<size2)&&(a3<size3)) {
+
+				
+				a1=size1;
+				a2= size2;
+				a3= size3;
+		
+
+			try {
+
+				DeviceData data1 = datarep.getDataByAntenne(1);
+				Antenne n1= antenneRepository.getbyId(1);
+				System.out.println(data1);
+				DeviceData data2 = datarep.getDataByAntenne(2);
+				Antenne n2= antenneRepository.getbyId(2);
+
+				DeviceData data3 = datarep.getDataByAntenne(3);
+				Antenne n3= antenneRepository.getbyId(3);
+
+				Integer rss1 = Integer.parseInt(data1.getRssi());
+				Integer rss2= Integer.parseInt(data2.getRssi());
+				Integer rss3 = Integer.parseInt(data3.getRssi());
+
+				Double longi = ( n1.getLeng()*(rss1) + n2.getLeng()*(rss2) + n3.getLeng()*(rss3) ) / (rss1 + rss2 + rss3);
+				Double alt = (n1.getAlt()*(rss1) + n2.getAlt()*(rss2) + n3.getAlt()*(rss3) ) / (rss1 + rss2 + rss3);
+
+
+				System.out.println(longi);
+				System.out.println(alt);
+				localisation loc = new localisation();
+				loc.setAltitude(alt);
+				loc.setLongitude(longi);
+				loc.setDeviceloca(repodevice.getbyIdMAc("azerty"));
+				loc.setDate(new Timestamp(System.currentTimeMillis()));
+				localirep.save(loc);
+
+			}catch (Exception e) {
+				System.out.println(e.getMessage());
+			}
+
+		}
+		
 	}
 
 	public synchronized List<String> getPayload(String string){
