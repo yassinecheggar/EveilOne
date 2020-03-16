@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Vector;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.Future;
 
 import javax.annotation.PostConstruct;
 
@@ -14,7 +15,9 @@ import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.scheduling.annotation.Async;
+import org.springframework.scheduling.annotation.AsyncResult;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -31,18 +34,22 @@ import com.upem.repository.UserRepository;
 public class TopicSubscriber {
 
 	@Autowired
+	@Lazy
 	UserRepository repouser;
 
 	@Autowired
+	@Lazy
 	DeviceRepository repodevice;
 
 	@Autowired
+	@Lazy
 	AntenneRepository antenneRepository;
 
 	@Autowired
 	DataRepository datarep;
 
 	@Autowired
+	@Lazy
 	LocalisarionRepository localirep;
 	private static int a1;
 	private static int a2;
@@ -55,27 +62,42 @@ public class TopicSubscriber {
 	private static String username = "solace-cloud-client";
 	private static String password = "usa9boldpiapdjqr9b7gii14h";
 
-
+	final CountDownLatch latch = new CountDownLatch(1);
+	
+	public TopicSubscriber() {
+		// TODO Auto-generated constructor stub
+	}
+	
+	
 	@Scheduled(fixedRate=10000)
-	public void addDataBase() {
-		System.out.println("addDataBase");
+	@Async
+	public Future<String> addDataBase() throws InterruptedException {
+		System.out.println("addDataabse");
 		System.out.println(dataString.size());
-		if(dataString.size()>=3 ) {
-			for (String s : dataString) {
+		Vector<String>dataString1 = new Vector<String>(); 
+		
+			dataString1 =  (Vector<String>) dataString.clone();
+			
+			for (String s : dataString1) {
 
 				getPayload(s);
+				dataString.remove(s);
 
 			}
-			dataString.clear(); 
-		} 
+			
+			System.out.println("im done here");
+		return new AsyncResult<String>("return value");
 	}
 
-	@Scheduled(fixedRate=60000)
+	@Scheduled(fixedRate=20000)
 	public void getlocalisation() {
+		
 		System.out.println("getlocalisation");
+		
 		int size1;
 		int size2;
 		int size3;
+		
 		if(first == true) {
 
 			a1=datarep.getallDataByAntenne(1);
@@ -83,13 +105,15 @@ public class TopicSubscriber {
 			a3=datarep.getallDataByAntenne(3);
 			
 			first = false;
+			 System.out.println(" is first");
 		}
+		
 		size1=datarep.getallDataByAntenne(1);
 		size2=datarep.getallDataByAntenne(2);
 		size3=datarep.getallDataByAntenne(3);
 		
-		if((a1<size1)&&(a1<size2)&&(a3<size3)) {
-
+		if((a1<size1)&&(a2<size2)&&(a3<size3)) {
+			
 				
 				a1=size1;
 				a2= size2;
@@ -132,7 +156,8 @@ public class TopicSubscriber {
 		
 	}
 
-	public synchronized List<String> getPayload(String string){
+	@Async
+	public  List<String> getPayload(String string){
 		DeviceData data =new DeviceData();
 		List<String> list = Arrays.asList(string.split(";"));
 		try {
@@ -148,7 +173,9 @@ public class TopicSubscriber {
 					data.setAntenne(antenneRepository.getbyId(Integer.parseInt(list.get(3))));
 					data.setRssi(list.get(4));
 					data.setDate(new Timestamp(System.currentTimeMillis()));
+					
 					System.out.println(data);
+					
 					datarep.save(data);
 				}
 
@@ -177,8 +204,16 @@ public class TopicSubscriber {
 		client.subscribe("EveiOne",0);
 
 
-		System.out.println("done");
+		System.out.println("Connected");
 
+	}
+	
+	
+	@Async
+	public void add(String ss) throws InterruptedException {
+		
+				getPayload(ss);
+				System.out.println("done");
 	}
 
 

@@ -13,31 +13,29 @@ import com.upem.repository.UserRepository;
 
 @Component
 public class SimpleMqttCallBack implements MqttCallback {
-	 
+
 	private String msg;
-	
-	
-	
+	private TopicSubscriber topicSubscriber;
+
 	public void connectionLost(Throwable throwable) {
-		
-		
-	    System.out.println("Connection to MQTT broker lost!");
-	    
-	   
-	  }
-	 
-	 
-	  public void messageArrived(String s, MqttMessage mqttMessage) throws Exception {
-		   msg = new String(mqttMessage.getPayload());
-	    System.out.println("Message received:\n\t"+ msg );
-	 
-	    	TopicSubscriber.dataString.add(msg);
-	  }
-	 
-	  public void deliveryComplete(IMqttDeliveryToken iMqttDeliveryToken) {
-	   
-		 
-	  }
+
+		System.out.println("Connection to MQTT broker lost!");
+
+	}
+
+
+	public void messageArrived(String s, MqttMessage mqttMessage) throws Exception {
+		msg = new String(mqttMessage.getPayload());
+		System.out.println("Message received:\n\t"+ msg );
+		TopicSubscriber.dataString.add(msg);	
+
+
+	}
+
+	public void deliveryComplete(IMqttDeliveryToken iMqttDeliveryToken) {
+
+
+	}
 
 	public String getMsg() {
 		return msg;
@@ -46,7 +44,7 @@ public class SimpleMqttCallBack implements MqttCallback {
 	public void setMsg(String msg) {
 		this.msg = msg;
 	}
-	
-	
-	
-	}
+
+
+
+}

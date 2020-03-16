@@ -26,10 +26,16 @@ public class DataController {
 	@Autowired
 	LocalisarionRepository locRepo;
 	
-	@GetMapping("/getloca/{id}")
-	public List<localisation> getallServices(@PathVariable Integer id) {
+	@GetMapping("/getlocalisations/{id}")
+	public List<localisation> getlocalisations(@PathVariable Integer id) {
 		
 		return locRepo.getbydevice(id);
+	}
+	
+	@GetMapping("/getcurrent/{id}")
+	public localisation getcurrent(@PathVariable Integer id) {
+		
+		return locRepo.getcurentlocationwithId(id);
 	}
 	
 	
@@ -37,6 +43,13 @@ public class DataController {
 	public List<DeviceData> getTemp(@PathVariable Integer id) {
 		
 		return dataRepository.getTempHum(id);
+	}
+	
+	
+	@GetMapping("/data")
+	public List<DeviceData> getdata() {
+		
+		return  (List<DeviceData>) dataRepository.findAll();
 	}
 	
 	

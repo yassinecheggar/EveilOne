@@ -16,6 +16,9 @@ public interface LocalisarionRepository extends CrudRepository<localisation, Int
 
 	@Query(value = "SELECT * FROM localisation where deviceloca_id =?1", nativeQuery = true)
 	List<localisation> getbydevice(Integer id);
+	
+	@Query(value = "SELECT * FROM localisation where deviceloca_id =?1 order by date desc limit 1", nativeQuery = true)
+	localisation getcurentlocationwithId(Integer id);
 	 
 
 }
