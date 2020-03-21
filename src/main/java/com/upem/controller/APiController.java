@@ -60,19 +60,28 @@ public class APiController {
 	@GetMapping("/start")
 	public String StartMQTT() {
 		
+		return "ok";
+	}
+	
+	@PutMapping("/Edit/{id}")
+	public String Edite(@PathVariable Integer id,@RequestBody User user) {
 		
+		User u = repo.getbyId(id);
+		if(u!=null) {
+			
+			u.setMail(user.getMail());
+			u.setNom(user.getNom());
+			u.setPrenom(user.getPrenom());
+			u.setMdp(user.getMdp());
+			
+		}
+		repo.save(u);
 		
 		return "ok";
 	}
 	
-	@GetMapping("/pub")
-	public String PubMQTT() {
-		
-		
-		
-		
-		return "ok";
-	}
+	
+	
 	
 	
 
