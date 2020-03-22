@@ -8,6 +8,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 
 
 @Entity
@@ -20,11 +22,13 @@ public class DeviceData {
 	private String rssi;
 	
 	
+	@JsonIgnore
 	@ManyToOne
 	@JoinColumn
 	private Device datadevice;
 	
 	private Date date;
+	@JsonIgnore
 	@ManyToOne
 	@JoinColumn
 	private Antenne antenne;

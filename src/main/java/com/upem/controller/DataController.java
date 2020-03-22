@@ -45,6 +45,12 @@ public class DataController {
 		return dataRepository.getTempHum(id);
 	}
 	
+	@GetMapping("/getDataOfDay/{id}")
+	public List<DeviceData> getDataByDay(@PathVariable Integer id) {
+		
+		return dataRepository.getdataOrderByDay(id);
+	}
+	
 	
 	@GetMapping("/data")
 	public List<DeviceData> getdata() {
