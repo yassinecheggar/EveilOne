@@ -1,5 +1,6 @@
 package com.upem.repository;
 
+import java.sql.Date;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.Query;
@@ -24,4 +25,6 @@ public interface LocalisarionRepository extends CrudRepository<localisation, Int
 	List<localisation> getDaylocation(Integer id);
 	 
 
+	@Query(value = "SELECT * FROM localisation   WHERE DATE(date) =?2 and  deviceloca_id=?1", nativeQuery = true)
+	List<localisation> getlocaBydate(Integer id,Date date);
 }
