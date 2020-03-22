@@ -25,7 +25,7 @@ public class APiController {
 
 	@Autowired
 	UserRepository repo;
-	
+
 	@GetMapping("/get")
 	public String addAlien()
 	{
@@ -33,15 +33,15 @@ public class APiController {
 	}
 	@PostMapping("/add")
 	public String addUser(@RequestBody User dep) {
-		
+
 		User a =  repo.save(dep);
 		if(a == null) return "no";
 		return "yes";
 	}
-	
+
 	@PostMapping("/conn")
 	public User login(@RequestBody User user) {
-		
+
 		User res= repo.login(user.getMail(), user.getMdp());
 		if(res==null) {
 			return null;
@@ -50,39 +50,41 @@ public class APiController {
 		res.setUserServices(null);
 		return res;	
 	}
-	
+
 	@GetMapping("/getAll")
 	public List<User> getusers() {
 		return (List<User>) repo.findAll();
 	}
-	
-	
+
+
 	@GetMapping("/start")
 	public String StartMQTT() {
-		
+
 		return "ok";
 	}
-	
+
 	@PutMapping("/Edit/{id}")
 	public String Edite(@PathVariable Integer id,@RequestBody User user) {
-		
+
 		User u = repo.getbyId(id);
 		if(u!=null) {
-			
+
 			u.setMail(user.getMail());
 			u.setNom(user.getNom());
 			u.setPrenom(user.getPrenom());
 			u.setMdp(user.getMdp());
-			
+
 		}
-		repo.save(u);
-		
+
+		User res =repo.save(u);
+		if(res==null) return "no";
+
 		return "ok";
 	}
-	
-	
-	
-	
-	
+
+
+
+
+
 
 }
