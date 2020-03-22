@@ -74,11 +74,13 @@ public class DataController {
 	
 	
 	@PostMapping("/getlocaBydate/{id}")
-	public List<localisation> getlocaBydate(@PathVariable Integer id ,@RequestBody java.sql.Date date) throws ParseException {
+	public List<localisation> getlocaBydate(@PathVariable Integer id ,@RequestBody DeviceData date) throws ParseException {
 		
 		
+		java.sql.Date sqldat= java.sql.Date.valueOf(date.getHum());
+		System.out.println(sqldat.toString());
 		
-		return locRepo.getlocaBydate(id, date);
+		return locRepo.getlocaBydate(id, sqldat.toString());
 	}
 	
 	

@@ -26,5 +26,5 @@ public interface LocalisarionRepository extends CrudRepository<localisation, Int
 	 
 
 	@Query(value = "SELECT * FROM localisation   WHERE DATE(date) =?2 and  deviceloca_id=?1", nativeQuery = true)
-	List<localisation> getlocaBydate(Integer id,Date date);
+	List<localisation> getlocaBydate(Integer id, String date);
 }
