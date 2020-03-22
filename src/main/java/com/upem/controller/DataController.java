@@ -52,6 +52,13 @@ public class DataController {
 	}
 	
 	
+	@GetMapping("/getlocaByDay/{id}")
+	public List<localisation> getlocaByDay(@PathVariable Integer id) {
+		
+		return locRepo.getDaylocation(id);
+	}
+	
+	
 	@GetMapping("/data")
 	public List<DeviceData> getdata() {
 		
