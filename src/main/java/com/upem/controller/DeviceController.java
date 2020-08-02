@@ -26,7 +26,7 @@ public class DeviceController {
 	@Autowired
 	DeviceRepository repoDev;
 
-	@PutMapping("/AddUserDevice/{id}")
+	@PutMapping("/AddUserDevice/{id}")// add device to user 
 	public String AddUserDevice(@PathVariable Integer id, @RequestBody Device dev)
 	{
 		User A= repo.getbyId(id);
@@ -43,7 +43,7 @@ public class DeviceController {
 		return "not";
 	}
 
-	@PostMapping("/add")
+	@PostMapping("/add") // add device 
 	public String addDevice(@RequestBody Device dev) {
 
 		repoDev.save(dev);
@@ -57,13 +57,13 @@ public class DeviceController {
 	}
 	
 	
-	@GetMapping("/gettest")
+	@GetMapping("/gettest")// test
 	public Device gettest() {
 
 		return repoDev.getbyIdMAc("yas");
 	}
 
-	@PostMapping("/deleteDeviceUser/{id}")
+	@PostMapping("/deleteDeviceUser/{id}")// delete user 
 	public String delete(@PathVariable Integer id,@RequestBody Device device  ) {
 
 		User A= repo.getbyId(id);

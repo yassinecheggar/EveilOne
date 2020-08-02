@@ -27,7 +27,8 @@ public class SimpleMqttCallBack implements MqttCallback {
 	public void messageArrived(String s, MqttMessage mqttMessage) throws Exception {
 		msg = new String(mqttMessage.getPayload());
 		System.out.println("Message received:\n\t"+ msg );
-		TopicSubscriber.dataString.add(msg);	
+		TopicSubscriber.dataString.add(msg);
+		System.out.println(msg);
 
 
 	}

@@ -29,33 +29,22 @@ public class AntenneController {
 		return "test Antenne";
 	}
 	
-	@GetMapping("/loal")
-	public Antenne test()
-	{
-		Antenne a = new Antenne();
-		a.setAlt(2);
-		a.setId(1);
-		a.setLeng(2.24);
-		a.setStatus("on");
-		a.setName("amin");
-		return a;
-	}
 	
-	@GetMapping("/getAll")
+	@GetMapping("/getAll") // get all antennas informations
 	public List<Antenne> getAll()
 	{
 		
 		return (List<Antenne>) repo.findAll();
 	}
 	
-	@PostMapping("/add")
+	@PostMapping("/add") // add new antenna
 	public void add(@RequestBody Antenne ant)
 	{
 		repo.save(ant);
 		
 	}
 	
-	@PutMapping("/edit/{id}")
+	@PutMapping("/edit/{id}")// edit antenna
 	public void edit(@PathVariable Integer id, @RequestBody Antenne ant)
 	{
 		 Antenne A= repo.getbyId(id);

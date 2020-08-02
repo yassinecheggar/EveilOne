@@ -56,7 +56,7 @@ public class TopicSubscriber {
 	private static int a3;
 	private boolean first= true;
 
-	public static Vector<String>dataString= new Vector<String>();
+	public static Vector<String>dataString= new Vector<String>(); //this will contain received MQTT msg the data is added from the SimpleMQttCAllback
 
 	private static String host = "tcp://mr2aqty0xnech1.messaging.solace.cloud:20966";
 	private static String username = "solace-cloud-client";
@@ -69,11 +69,12 @@ public class TopicSubscriber {
 	}
 	
 	
-	@Scheduled(fixedRate=10000)
+	//we use this function to allow us to get the data that we receive from MQTT callback and we add it to our database 
+	//@Scheduled(fixedRate=10000)
 	@Async
 	public Future<String> addDataBase() throws InterruptedException {
-		System.out.println("addDataabse");
-		System.out.println(dataString.size());
+		//System.out.println("addDataabse");
+		//System.out.println(dataString.size());
 		Vector<String>dataString1 = new Vector<String>(); 
 		
 			dataString1 =  (Vector<String>) dataString.clone();
@@ -85,14 +86,16 @@ public class TopicSubscriber {
 
 			}
 			
-			System.out.println("im done here");
+		//	System.out.println("im done here");
 		return new AsyncResult<String>("return value");
 	}
 
-	@Scheduled(fixedRate=20000)
+	//this function will be executed every 2s and will check if new data is stored for the 3 antennas if so
+	// it will  calculate the location using the given function and will store the result in the database 
+	//@Scheduled(fixedRate=20000)
 	public void getlocalisation() {
 		
-		System.out.println("getlocalisation");
+	//	System.out.println("getlocalisation");
 		
 		int size1;
 		int size2;
@@ -105,7 +108,7 @@ public class TopicSubscriber {
 			a3=datarep.getallDataByAntenne(3);
 			
 			first = false;
-			 System.out.println(" is first");
+			// System.out.println(" is first");
 		}
 		
 		size1=datarep.getallDataByAntenne(1);
@@ -156,6 +159,7 @@ public class TopicSubscriber {
 		
 	}
 
+	//here we pasre the Mqtt msg to  create  an object and persist i
 	@Async
 	public  List<String> getPayload(String string){
 		DeviceData data =new DeviceData();
@@ -189,10 +193,10 @@ public class TopicSubscriber {
 
 	}
 
-
-	@PostConstruct
+	//this function will be lunched at the start after that spring beans are done the Spring beans
+	//@PostConstruct
 	@Async
-	public void daddd() throws MqttException {
+	public void MQTTlistner() throws MqttException {
 		MqttConnectOptions connOpts = new MqttConnectOptions();
 		connOpts.setCleanSession(true);
 		connOpts.setUserName(username);
@@ -201,7 +205,7 @@ public class TopicSubscriber {
 		MqttClient client= new MqttClient(host, MqttClient.generateClientId());
 		client.setCallback( new SimpleMqttCallBack() );
 		client.connect(connOpts);
-		client.subscribe("EveiOne",0);
+		client.subscribe("EveiOne",0);//topic + Qos (0,1,2)
 
 
 		System.out.println("Connected");
@@ -209,12 +213,4 @@ public class TopicSubscriber {
 	}
 	
 	
-	@Async
-	public void add(String ss) throws InterruptedException {
-		
-				getPayload(ss);
-				System.out.println("done");
-	}
-
-
 }

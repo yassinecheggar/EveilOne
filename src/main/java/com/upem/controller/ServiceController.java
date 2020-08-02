@@ -25,7 +25,7 @@ public class ServiceController {
 	@Autowired
 	UserRepository repoUser;
 	
-	@PostMapping("/add")
+	@PostMapping("/add") // add service
 	public String addService(@RequestBody Service service) {
 
 		repo.save(service);
@@ -34,7 +34,7 @@ public class ServiceController {
 	}
 
 	
-	@GetMapping("/getall")
+	@GetMapping("/getall")// get all services
 	public List<Service> getallServices() {
 
 		return (List<Service>) repo.findAll();
@@ -54,7 +54,7 @@ public class ServiceController {
 
 	
 	
-	@GetMapping("/AddServiceUser/{id}")
+	@GetMapping("/AddServiceUser/{id}")// add service to  user 
 	public String AddServiceUser(@PathVariable Integer id, @RequestBody Service dev) {
 
 		User A= repoUser.getbyId(id);
